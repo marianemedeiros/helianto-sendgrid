@@ -1,12 +1,11 @@
 package org.helianto.sendgrid.config;
 
+import org.helianto.sendgrid.message.sender.SendGridWebMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-
-import com.iservport.message.sender.SendGridWebMailSender;
 
 /**
  * Sendgrid code based configuration.
@@ -26,8 +25,8 @@ public class SendGridConfig {
 	public SendGridWebMailSender sendGridWebMailSender() {
 		SendGridWebMailSender ms = new SendGridWebMailSender();
 		ms.setTargetURL(env.getProperty("helianto.sendGrid.apiEndPoint", SEND_GRID_API_ENDPOINT));
-		ms.setApiUser(env.getProperty("iservport.sendgrid.user"));
-		ms.setApiKey(env.getProperty("iservport.sendgrid.password"));
+		ms.setApiUser(env.getProperty("sendgrid.user"));
+		ms.setApiKey(env.getProperty("sendgrid.password"));
 		return ms;
 	}
 	
