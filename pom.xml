@@ -164,5 +164,19 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+		<repository>
+			<id>helianto-aws-release</id>
+			<url>s3://maven.helianto.org/release</url>
+		</repository>
+		<snapshotRepository>
+			<id>helianto-aws-snapshot</id>
+			<url>s3://maven.helianto.org/snapshot</url>
+		</snapshotRepository>
+		<site>
+			<id>website</id>
+			<url>file://localhost/var/www/helianto-site/</url>
+		</site>
+	</distributionManagement>
 	
 </project>
