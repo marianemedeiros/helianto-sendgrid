@@ -1,12 +1,40 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.helianto</groupId>
-  <artifactId>helianto-sendgrid</artifactId>
-  <version>0.4.3-SNAPSHOT</version>
-  <name>helianto-sendgrid</name>
-  <description>Sendgrid tools</description>
-  <properties>
-	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.helianto</groupId>
+	<artifactId>helianto-sendgrid</artifactId>
+	<version>0.4.3-SNAPSHOT</version>
+	<name>helianto-sendgrid</name>
+		
+	<description>Sendgrid tools</description>
+	<url>http://www.helianto.org</url>
+
+	<inceptionYear>2015</inceptionYear>
+	
+	<developers>
+		<developer>
+			<id>mauricio</id>
+			<name>Maurício Fernandes de Castro</name>
+			<email>mauricio at iservport dot com</email>
+			<timezone>-3</timezone>
+		</developer>
+		<developer>
+			<id>eldevanjr</id>
+			<name>Eldevan Nery Junior</name>
+			<email>eldevanjr at iservport dot com</email>
+			<timezone>-3</timezone>
+		</developer>
+	</developers>
+	
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<helianto.version>0.4.3-SNAPSHOT</helianto.version>
 	</properties>
 
@@ -23,27 +51,27 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-		    <groupId>com.sendgrid</groupId>
-		    <artifactId>smtpapi-java</artifactId>
-		    <version>0.1.1</version>
-		</dependency>	
-		<dependency>
-		    <groupId>org.apache.httpcomponents</groupId>
-		    <artifactId>httpclient</artifactId>
-		    <version>4.3.4</version>
+			<groupId>com.sendgrid</groupId>
+			<artifactId>smtpapi-java</artifactId>
+			<version>0.1.1</version>
 		</dependency>
-		
 		<dependency>
-		    <groupId>org.apache.httpcomponents</groupId>
-		    <artifactId>httpmime</artifactId>
-		    <version>4.3.4</version>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.3.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.helianto</groupId>
 			<artifactId>helianto-inventory</artifactId>
@@ -94,10 +122,8 @@
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
- 	 </dependencies>
- 	 <!--
-	 ! build 
-	 -->
+	</dependencies>
+	<!-- ! build -->
 	<build>
 		<finalName>helianto-sendgrid</finalName>
 		<extensions>
@@ -112,7 +138,7 @@
 				<artifactId>aws-maven</artifactId>
 				<version>5.0.0.RELEASE</version>
 			</extension>
-    	</extensions>
+		</extensions>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -143,7 +169,7 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.6.5-SNAPSHOT</version>
 			</plugin>
-   			<plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 			</plugin>
@@ -154,12 +180,12 @@
 				<configuration>
 					<contextPath>iservport</contextPath>
 					<libs>
-		                <jarArtifact>
-	                        <groupId>mysql</groupId>
-	                        <artifactId>mysql-connector-java</artifactId>
-	                        <version>5.1.18</version>
-		                </jarArtifact>
-	                </libs>
+						<jarArtifact>
+							<groupId>mysql</groupId>
+							<artifactId>mysql-connector-java</artifactId>
+							<version>5.1.18</version>
+						</jarArtifact>
+					</libs>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -178,5 +204,5 @@
 			<url>file://localhost/var/www/helianto-site/</url>
 		</site>
 	</distributionManagement>
-	
+
 </project>
