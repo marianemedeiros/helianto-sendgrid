@@ -34,10 +34,11 @@ public class StaticController {
 	 */
 	@RequestMapping(value="/template/{templateId}", method=RequestMethod.GET)
 	public String message(Model model, @PathVariable String templateId, @MatrixVariable Map<String, LinkedList<String>> matrixVars
-			, @RequestParam(required=false) String confirmationuri) {
+			, @RequestParam(required=false) String confirmationuri, @RequestParam(required=false) String rejecturi) {
 		logger.debug("Static content from template: {}", templateId);
 		
 		model.addAttribute("staticuri", "#");
+		
 		model.addAttribute("staticContent", "/sendgrid/"+templateId);
 		//não funciona 
 		model.addAllAttributes(matrixVars);
@@ -50,6 +51,9 @@ public class StaticController {
 		}
 		if(confirmationuri!=null){
 			model.addAttribute("confirmationuri", confirmationuri);
+		}
+		if(rejecturi!=null){
+			model.addAttribute("rejecturi", rejecturi);
 		}
 		
 		return "frame-static";
