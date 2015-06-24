@@ -74,28 +74,6 @@
 
 		<dependency>
 			<groupId>org.helianto</groupId>
-			<artifactId>helianto-inventory</artifactId>
-			<version>${helianto.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.easymock</groupId>
-					<artifactId>easymock</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.helianto</groupId>
-			<artifactId>helianto-resource</artifactId>
-			<version>${helianto.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.easymock</groupId>
-					<artifactId>easymock</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.helianto</groupId>
 			<artifactId>helianto-order</artifactId>
 			<version>${helianto.version}</version>
 			<exclusions>

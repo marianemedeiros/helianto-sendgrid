@@ -14,6 +14,7 @@ import org.helianto.core.MessageSender;
  * SendGrid Web API message sender.
  * 
  * @author mauriciofernandesdecastro
+ * @deprecated use SendGridSender
  */
 public class SendGridWebMailSender implements MessageSender {
 	

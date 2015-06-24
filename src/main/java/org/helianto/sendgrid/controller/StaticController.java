@@ -26,7 +26,7 @@ public class StaticController {
 	private static final Logger logger = LoggerFactory.getLogger(StaticController.class);
 	
 	/**
-	 * Build email page.
+	 * Build e-mail page.
 	 * 
 	 * @param model
 	 * @param templateId
@@ -40,7 +40,7 @@ public class StaticController {
 		model.addAttribute("staticuri", "#");
 		
 		model.addAttribute("staticContent", "/sendgrid/"+templateId);
-		//não funciona 
+
 		model.addAllAttributes(matrixVars);
 		for (Entry<String, LinkedList<String>> entry : matrixVars.entrySet())
 		{

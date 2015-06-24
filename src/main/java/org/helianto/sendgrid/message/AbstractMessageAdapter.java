@@ -14,6 +14,7 @@ import org.springframework.core.io.Resource;
  * Message adapter base class.
  * 
  * @author mauriciofernandesdecastro
+ * @deprecated use SendGridMessageAdapter.
  */
 public abstract class AbstractMessageAdapter<T> 
 	implements MessageAdapter<T> {
