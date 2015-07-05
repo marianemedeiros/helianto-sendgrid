@@ -35,7 +35,7 @@
 	</licenses>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<helianto.version>0.4.3-SNAPSHOT</helianto.version>
+		<helianto.version>0.4.4-SNAPSHOT</helianto.version>
 	</properties>
 
 	<dependencies>
