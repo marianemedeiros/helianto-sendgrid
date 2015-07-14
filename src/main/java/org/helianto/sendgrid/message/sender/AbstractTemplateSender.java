@@ -225,7 +225,7 @@ public abstract class AbstractTemplateSender {
 	/**
 	 * Override to change confirmation URI, if any.
 	 */
-	protected String getConfirmationUri() {
+	protected String getConfirmationUri(String... params) {
 		return confirmationUri;
 	}
 	
