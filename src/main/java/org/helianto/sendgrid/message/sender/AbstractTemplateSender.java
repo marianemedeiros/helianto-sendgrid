@@ -130,7 +130,7 @@ public abstract class AbstractTemplateSender {
           		sendGridEmail.addSubstitution("${recipientEmail}", new String[] { new String(Base64.encodeBase64(recipientEmail.getBytes())) } );
           		sendGridEmail.addSubstitution("${recipientFirstName}", new String[] { new String(Base64.encodeBase64(recipientFirstName.getBytes())) } );
           		sendGridEmail.addSubstitution("${recipientLastName}", new String[] { new String(Base64.encodeBase64(recipientLastName.getBytes())) } );
-          		for (String key: getDefaultSubstitutions().keySet()) {
+          		for (String key: getDefaultSubstitutions(params).keySet()) {
               		sendGridEmail.addSubstitution(key, new String[] { new String(Base64.encodeBase64(getDefaultSubstitutions().get(key).getBytes())) } );
           		}
           		sendGridEmail.getSMTPAPI().addFilter("templates", "enabled", 1);
@@ -168,7 +168,7 @@ public abstract class AbstractTemplateSender {
 	/**
 	 * Body.
 	 */
-	protected String getBody() {
+	protected String getBody(String... params) {
 		return "<p></p>";
 	}
 	
@@ -183,8 +183,9 @@ public abstract class AbstractTemplateSender {
 	 */
 	protected Map<String, String> getDefaultSubstitutions(String... params) {
 		Map<String, String> substitutions = new HashMap<>();
-		if (confirmationUri!=null && !confirmationUri.isEmpty()) {
-			substitutions.put("${confirmationUri}", getConfirmationUriEncoded());
+		String internalConfirmationUri = getConfirmationUri(params);
+		if (internalConfirmationUri!=null && !internalConfirmationUri.isEmpty()) {
+			substitutions.put("${confirmationUri}", getConfirmationUriEncoded(internalConfirmationUri));
 		}
 		substitutions.put("${senderEmail}", senderEmail);
 		Map<String, String> paramMap = getParams(params);
@@ -230,24 +231,14 @@ public abstract class AbstractTemplateSender {
 	}
 	
 	/**
-	 * True if confirmation URI is not empty.
-	 */
-	protected final boolean hasConfirmationUri() {
-		return confirmationUri!=null && !confirmationUri.isEmpty();
-	}
-	
-	/**
 	 * Confirmation URI encoded, if any.
 	 */
-	protected final String getConfirmationUriEncoded() {
-		if (hasConfirmationUri()) {
-			try {
-				return URLEncoder.encode(confirmationUri, StandardCharsets.UTF_8.name());
-			} catch (UnsupportedEncodingException e) {
-				throw new IllegalArgumentException("Unable to encode confirmation uri.");
-			}
+	protected final static String getConfirmationUriEncoded(String confirmationUri) {
+		try {
+			return URLEncoder.encode(confirmationUri, StandardCharsets.UTF_8.name());
+		} catch (UnsupportedEncodingException e) {
+			throw new IllegalArgumentException("Unable to encode confirmation uri.");
 		}
-		return "";
 	}
 	
 }
