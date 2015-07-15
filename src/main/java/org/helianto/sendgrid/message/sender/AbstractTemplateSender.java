@@ -114,29 +114,30 @@ public abstract class AbstractTemplateSender {
 		logger.debug("Sender {}<{}>", senderName, senderEmail);
 		
 		SendGridMessageAdapter sendGridEmail = new SendGridMessageAdapter(); 
+		Map<String, String> paramMap = decodeParams(params);
 
 		sendGridEmail.setSubject(subject);
-		sendGridEmail.setHtml(getBody());
+		sendGridEmail.setHtml(getBody(paramMap));
 
 		sendGridEmail.addTo(recipientEmail);
 		sendGridEmail.addToName(recipientFirstName.trim()+" "+recipientLastName);
 		sendGridEmail.setFrom(senderEmail);
 		sendGridEmail.setFromName(senderName);
 		sendGridEmail.setText(subject);
-		
 		String templateId = getTemplateId();
       	try {
           	if (templateId!=null) {
           		sendGridEmail.addSubstitution("${recipientEmail}", new String[] { new String(Base64.encodeBase64(recipientEmail.getBytes())) } );
           		sendGridEmail.addSubstitution("${recipientFirstName}", new String[] { new String(Base64.encodeBase64(recipientFirstName.getBytes())) } );
           		sendGridEmail.addSubstitution("${recipientLastName}", new String[] { new String(Base64.encodeBase64(recipientLastName.getBytes())) } );
-          		for (String key: getDefaultSubstitutions(params).keySet()) {
-              		sendGridEmail.addSubstitution(key, new String[] { new String(Base64.encodeBase64(getDefaultSubstitutions().get(key).getBytes())) } );
+          		for (String key: getDefaultSubstitutions(paramMap).keySet()) {
+              		sendGridEmail.addSubstitution(key, new String[] { new String(Base64.encodeBase64(getDefaultSubstitutions(paramMap).get(key).getBytes())) } );
           		}
           		sendGridEmail.getSMTPAPI().addFilter("templates", "enabled", 1);
           		sendGridEmail.addFilter("templates", "template_id", templateId);
           	}
 			Response response = sendGridSender.send(sendGridEmail);
+			System.err.println(response.getMessage()); 
 			int responseCode = response.getCode();
 			if (responseCode!=200) {
 				logger.warn("E-mail failed ({}) with message: {} ", responseCode, response.getMessage());
@@ -167,8 +168,10 @@ public abstract class AbstractTemplateSender {
 	
 	/**
 	 * Body.
+	 * 
+	 * @param paramMap
 	 */
-	protected String getBody(String... params) {
+	protected String getBody(Map<String, String> paramMap) {
 		return "<p></p>";
 	}
 	
@@ -181,43 +184,52 @@ public abstract class AbstractTemplateSender {
 	 * 
 	 * @param params
 	 */
-	protected Map<String, String> getDefaultSubstitutions(String... params) {
+	protected Map<String, String> getDefaultSubstitutions(Map<String, String> paramMap) {
 		Map<String, String> substitutions = new HashMap<>();
-		String internalConfirmationUri = getConfirmationUri(params);
-		if (internalConfirmationUri!=null && !internalConfirmationUri.isEmpty()) {
-			substitutions.put("${confirmationUri}", getConfirmationUriEncoded(internalConfirmationUri));
+		if (paramMap.containsKey("confirmationToken")) {
+			String internalConfirmationUri = getConfirmationUri(paramMap.get("confirmationToken"));
+			if (internalConfirmationUri!=null && !internalConfirmationUri.isEmpty()) {
+				substitutions.put("${confirmationUri}", getConfirmationUriEncoded(internalConfirmationUri));
+			}
 		}
 		substitutions.put("${senderEmail}", senderEmail);
-		Map<String, String> paramMap = getParams(params);
 		for (String param: paramMap.keySet()) {
 			try {
 				substitutions.put("${"+param+"}"
 						, URLEncoder.encode(paramMap.get(param), StandardCharsets.UTF_8.name()));
 			} catch (UnsupportedEncodingException e) {
-				logger.warn("Unable to encode param {} = {}",param, getParams().get(param));
+				logger.warn("Unable to encode param {} = {}",param, paramMap.get(param));
 			}			
 		}
 		return substitutions;
 	}
 	
 	/**
-	 * Override to add parameters as extra substitutions.
+	 * Decode params as map.
+	 * 
+	 * @param params
 	 */
-	protected Map<String, String> getParams(String... params) {
-		return new HashMap<String, String>();
+	protected final Map<String, String> decodeParams(String... params) {
+		Map<String, String> paramMap = new HashMap<>();
+		for (int i = 0; i < params.length; i=i+2) {
+			paramMap.put(params[i], params[i+1]);
+		} 
+		return paramMap;
 	}
 	
 	/**
 	 * Read parameters as a query.
+	 * 
+	 * @param paramMap
 	 */
-	protected final String getParamsAsQuery(String... params) {
+	protected final String getParamsAsQuery(Map<String, String> paramMap) {
 		StringBuilder query = new StringBuilder();
-		for (String param: getParams(params).keySet()) {
+		for (String param: paramMap.keySet()) {
 			try {
 				query.append(param).append("=")
-					.append(URLEncoder.encode(getParams().get(param), StandardCharsets.UTF_8.name()));
+					.append(URLEncoder.encode(paramMap.get(param), StandardCharsets.UTF_8.name()));
 			} catch (UnsupportedEncodingException e) {
-				logger.warn("Unable to encode param {} = {}",param, getParams().get(param));
+				logger.warn("Unable to encode param {} = {}", param, paramMap.get(param));
 			}			
 		}
 		return query.toString();
@@ -225,13 +237,17 @@ public abstract class AbstractTemplateSender {
 	
 	/**
 	 * Override to change confirmation URI, if any.
+	 * 
+	 * @param confirmationToken
 	 */
-	protected String getConfirmationUri(String... params) {
+	protected String getConfirmationUri(String confirmationToken) {
 		return confirmationUri;
 	}
 	
 	/**
 	 * Confirmation URI encoded, if any.
+	 * 
+	 * @param confirmationUri
 	 */
 	protected final static String getConfirmationUriEncoded(String confirmationUri) {
 		try {
