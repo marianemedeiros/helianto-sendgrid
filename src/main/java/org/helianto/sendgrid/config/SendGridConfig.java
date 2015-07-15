@@ -7,9 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
  * Sendgrid code based configuration.
@@ -53,7 +50,14 @@ public class SendGridConfig  {
 	 */
 	@Bean
 	public SendGridSender sendGridSender() {
-		return new SendGridSender(env.getProperty(sendGridUserProperty), env.getProperty(sendGridPasswordProperty));		
+		String sendGridUser = env.getProperty(sendGridUserProperty);
+		String sendGridPassword = env.getProperty(sendGridPasswordProperty);
+		if (sendGridUser!=null && !sendGridUser.isEmpty() 
+				&& sendGridPassword!=null && !sendGridPassword.isEmpty()) {
+			return new SendGridSender(sendGridUser, sendGridPassword);		
+		}
+		throw new IllegalArgumentException("Unable to create sender. Please, provide valid "
+				+ "'helianto.sendgrid.user' and/or 'helianto.sendgrid.password' properties");
 	}
 	
 }
