@@ -5,7 +5,6 @@ import org.helianto.sendgrid.message.sender.SendGridWebMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 /**
@@ -14,7 +13,6 @@ import org.springframework.core.env.Environment;
  * @author mauriciofernandesdecastro
  */
 @Configuration
-@PropertySource("classpath:/META-INF/sendgrid.properties")
 public class SendGridConfig  {
 
 	private final static String SEND_GRID_API_ENDPOINT = "https://sendgrid.com/api/mail.send.xml";
