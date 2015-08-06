@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.mail.internet.MimeUtility;
 
-import org.apache.commons.codec.binary.Base64;
 import org.helianto.core.domain.Identity;
 import org.helianto.sendgrid.message.SendGridMessageAdapter;
 import org.helianto.sendgrid.message.sender.SendGridSender.Response;
@@ -125,11 +125,12 @@ public abstract class AbstractTemplateSender {
 		sendGridEmail.setFromName(senderName);
 		sendGridEmail.setText(subject);
 		String templateId = getTemplateId();
+		
       	try {
           	if (templateId!=null) {
-          		sendGridEmail.addSubstitution("${recipientEmail}", new String[] { new String(Base64.encodeBase64(recipientEmail.getBytes())) } );
-          		sendGridEmail.addSubstitution("${recipientFirstName}", new String[] { new String(Base64.encodeBase64(recipientFirstName.getBytes())) } );
-          		sendGridEmail.addSubstitution("${recipientLastName}", new String[] { new String(Base64.encodeBase64(recipientLastName.getBytes())) } );
+          		sendGridEmail.addSubstitution("${recipientEmail}", new String[] { new String(MimeUtility.encodeText(recipientEmail)) } );
+          		sendGridEmail.addSubstitution("${recipientFirstName}", new String[] { new String(MimeUtility.encodeText(recipientFirstName)) } );
+          		sendGridEmail.addSubstitution("${recipientLastName}", new String[] { new String(MimeUtility.encodeText(recipientLastName)) } );
           		for (String key: getDefaultSubstitutions(paramMap).keySet()) {
               		sendGridEmail.addSubstitution(key, new String[] { new String(getDefaultSubstitutions(paramMap).get(key).getBytes()) } );
           		}
@@ -222,7 +223,7 @@ public abstract class AbstractTemplateSender {
 		for (String param: paramMap.keySet()) {
 			try {
 				query.append(param).append("=")
-					.append(URLEncoder.encode(paramMap.get(param), StandardCharsets.UTF_8.name()));
+					.append(MimeUtility.encodeText(paramMap.get(param)));
 			} catch (UnsupportedEncodingException e) {
 				logger.warn("Unable to encode param {} = {}", param, paramMap.get(param));
 			}			

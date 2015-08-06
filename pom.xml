@@ -51,6 +51,12 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.sendgrid</groupId>
 			<artifactId>smtpapi-java</artifactId>
 			<version>0.1.1</version>
