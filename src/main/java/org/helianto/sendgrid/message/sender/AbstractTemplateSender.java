@@ -94,7 +94,7 @@ public abstract class AbstractTemplateSender {
 	 * @param subject
 	 * @param params
 	 */
-	public final boolean send(Identity recipient, String subject, String... params) {
+	public boolean send(Identity recipient, String subject, String... params) {
 		return send(recipient.getPrincipal(), recipient.getIdentityFirstName(), recipient.getIdentityLastName()
 				,subject, params);
 	}
@@ -108,7 +108,7 @@ public abstract class AbstractTemplateSender {
 	 * @param subject
 	 * @param params
 	 */
-	public final boolean send(String recipientEmail, String recipientFirstName, String recipientLastName
+	public boolean send(String recipientEmail, String recipientFirstName, String recipientLastName
 			, String subject, String... params) {
 		
 		logger.debug("Sender {}<{}>", senderName, senderEmail);
