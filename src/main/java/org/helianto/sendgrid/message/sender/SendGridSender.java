@@ -131,7 +131,6 @@ public class SendGridSender {
     if (!email.getSMTPAPI().jsonString().equals("{}"))
       builder.addTextBody(PARAM_XSMTPAPI, email.getSMTPAPI().jsonString());
     
-    System.err.println("Texto"+email.getText());
     return builder.build();
   }
 

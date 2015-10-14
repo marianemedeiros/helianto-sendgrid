@@ -46,6 +46,10 @@ public abstract class AbstractTemplateSender {
 	 */
 	protected String staticPath = "/static/template/";
 	
+	protected String recipientName;
+	
+	protected String recipientEmail;
+	
 	private final String senderEmail;
 	
 	private final String senderName;
@@ -95,6 +99,8 @@ public abstract class AbstractTemplateSender {
 	 * @param params
 	 */
 	public boolean send(Identity recipient, String subject, String... params) {
+		recipientEmail = recipient.getPrincipal();
+		recipientName = recipient.getIdentityFirstName();
 		return send(recipient.getPrincipal(), recipient.getIdentityFirstName(), recipient.getIdentityLastName()
 				,subject, params);
 	}
@@ -111,7 +117,7 @@ public abstract class AbstractTemplateSender {
 	public boolean send(String recipientEmail, String recipientFirstName, String recipientLastName
 			, String subject, String... params) {
 		
-		logger.debug("Sender {}<{}>", senderName, senderEmail);
+		logger.debug("Sender {}<{}>", senderName ,  senderEmail);
 		
 		SendGridMessageAdapter sendGridEmail = new SendGridMessageAdapter(); 
 		Map<String, String> paramMap = decodeParams(params);
@@ -121,11 +127,10 @@ public abstract class AbstractTemplateSender {
 
 		sendGridEmail.addTo(recipientEmail);
 		sendGridEmail.addToName(recipientFirstName.trim()+" "+recipientLastName);
-		sendGridEmail.setFrom(senderEmail);
-		sendGridEmail.setFromName(senderName);
+		sendGridEmail.setFrom(recipientEmail);
+		sendGridEmail.setFromName(recipientFirstName);
 		sendGridEmail.setText(subject);
 		String templateId = getTemplateId();
-		
       	try {
           	if (templateId!=null) {
           		sendGridEmail.addSubstitution("${recipientEmail}", new String[] { new String(MimeUtility.encodeText(recipientEmail)) } );
@@ -138,13 +143,14 @@ public abstract class AbstractTemplateSender {
           		sendGridEmail.addFilter("templates", "template_id", templateId);
           	}
 			Response response = sendGridSender.send(sendGridEmail);
-			System.err.println(response.getMessage()); 
+			
 			int responseCode = response.getCode();
 			if (responseCode!=200) {
 				logger.warn("E-mail failed ({}) with message: {} ", responseCode, response.getMessage());
 				return false;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.debug("Unable to send: {} ", e.getMessage());
 			return false;
 		}
@@ -189,6 +195,7 @@ public abstract class AbstractTemplateSender {
 		Map<String, String> substitutions = new HashMap<>();
 		if (paramMap.containsKey("confirmationToken")) {
 			String internalConfirmationUri = getConfirmationUri(paramMap.get("confirmationToken"));
+			System.err.println("confirmationToken: " + internalConfirmationUri);
 			if (internalConfirmationUri!=null && !internalConfirmationUri.isEmpty()) {
 				substitutions.put("${confirmationUri}", internalConfirmationUri);
 			}
@@ -236,6 +243,7 @@ public abstract class AbstractTemplateSender {
 	 * 
 	 * @param confirmationToken
 	 */
+	
 	protected String getConfirmationUri(String confirmationToken) {
 		return confirmationUri;
 	}
@@ -252,5 +260,7 @@ public abstract class AbstractTemplateSender {
 			throw new IllegalArgumentException("Unable to encode confirmation uri.");
 		}
 	}
+
+
 	
 }

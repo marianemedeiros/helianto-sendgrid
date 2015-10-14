@@ -36,15 +36,18 @@ public class StaticController {
 	public String message(Model model, @PathVariable String templateId, @MatrixVariable Map<String, LinkedList<String>> matrixVars
 			, @RequestParam(required=false) String confirmationuri, @RequestParam(required=false) String rejecturi) {
 		logger.debug("Static content from template: {}", templateId);
+		System.err.println("StaticController");
 		
 		model.addAttribute("staticuri", "#");
 		
 		model.addAttribute("staticContent", "/sendgrid/"+templateId);
 
 		model.addAllAttributes(matrixVars);
+		System.err.println("Size: " + matrixVars.size());
 		for (Entry<String, LinkedList<String>> entry : matrixVars.entrySet())
 		{
 			for (String string : entry.getValue()) {
+				System.err.println("entry: " + string);
 				model.addAttribute(entry.getKey(), string);
 				break;
 			}
