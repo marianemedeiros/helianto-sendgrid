@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.helianto</groupId>
 	<artifactId>helianto-sendgrid</artifactId>
-	<version>0.5.0-SNAPSHOT</version>
+	<version>0.5.1-SNAPSHOT</version>
 	<name>helianto-sendgrid</name>
 		
 	<description>Sendgrid tools</description>
@@ -35,7 +35,6 @@
 	</licenses>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<helianto.version>0.5.0-SNAPSHOT</helianto.version>
 	</properties>
 
 	<dependencies>
@@ -77,21 +76,10 @@
 			<version>3.0</version>
 		</dependency>
 
-<!-- 		<dependency>
-			<groupId>org.helianto</groupId>
-			<artifactId>helianto-order</artifactId>
-			<version>${helianto.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.easymock</groupId>
-					<artifactId>easymock</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
- -->		<dependency>
+		<dependency>
 			<groupId>org.helianto</groupId>
 			<artifactId>helianto-security</artifactId>
-			<version>${helianto.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.easymock</groupId>
@@ -106,6 +94,7 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+	
 	<!-- ! build -->
 	<build>
 		<finalName>helianto-sendgrid</finalName>
