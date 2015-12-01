@@ -101,6 +101,7 @@ public abstract class AbstractTemplateSender {
 	public boolean send(Identity recipient, String subject, String... params) {
 		recipientEmail = recipient.getPrincipal();
 		recipientName = recipient.getIdentityFirstName();
+		
 		return send(recipient.getPrincipal(), recipient.getIdentityFirstName(), recipient.getIdentityLastName()
 				,subject, params);
 	}
@@ -121,7 +122,7 @@ public abstract class AbstractTemplateSender {
 		
 		SendGridMessageAdapter sendGridEmail = new SendGridMessageAdapter(); 
 		Map<String, String> paramMap = decodeParams(params);
-
+		
 		sendGridEmail.setSubject(subject);
 		sendGridEmail.setHtml(getBody(paramMap));
 
@@ -137,7 +138,7 @@ public abstract class AbstractTemplateSender {
           		sendGridEmail.addSubstitution("${recipientFirstName}", new String[] { new String(MimeUtility.encodeText(recipientFirstName)) } );
           		sendGridEmail.addSubstitution("${recipientLastName}", new String[] { new String(MimeUtility.encodeText(recipientLastName)) } );
           		for (String key: getDefaultSubstitutions(paramMap).keySet()) {
-              		sendGridEmail.addSubstitution(key, new String[] { new String(getDefaultSubstitutions(paramMap).get(key).getBytes()) } );
+          			sendGridEmail.addSubstitution(key, new String[] { new String(getDefaultSubstitutions(paramMap).get(key).getBytes()) } );
           		}
           		sendGridEmail.getSMTPAPI().addFilter("templates", "enabled", 1);
           		sendGridEmail.addFilter("templates", "template_id", templateId);
@@ -195,9 +196,8 @@ public abstract class AbstractTemplateSender {
 		Map<String, String> substitutions = new HashMap<>();
 		if (paramMap.containsKey("confirmationToken")) {
 			String internalConfirmationUri = getConfirmationUri(paramMap.get("confirmationToken"));
-			System.err.println("confirmationToken: " + internalConfirmationUri);
 			if (internalConfirmationUri!=null && !internalConfirmationUri.isEmpty()) {
-				substitutions.put("${confirmationUri}", internalConfirmationUri);
+				substitutions.put("${confirmationuri}", internalConfirmationUri);
 			}
 		}
 		substitutions.put("${senderEmail}", senderEmail);
@@ -216,6 +216,7 @@ public abstract class AbstractTemplateSender {
 		Map<String, String> paramMap = new HashMap<>();
 		for (int i = 0; i < params.length; i=i+2) {
 			paramMap.put(params[i], params[i+1]);
+			System.err.println(params[i] + " = " + params[i+1]);
 		} 
 		return paramMap;
 	}
