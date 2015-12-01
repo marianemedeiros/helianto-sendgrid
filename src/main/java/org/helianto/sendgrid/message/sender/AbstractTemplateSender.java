@@ -131,7 +131,8 @@ public abstract class AbstractTemplateSender {
 		sendGridEmail.setFrom(recipientEmail);
 		sendGridEmail.setFromName(recipientFirstName);
 		sendGridEmail.setText(subject);
-		String templateId = getTemplateId();
+		
+		String templateId = env.getProperty(templatePrefix+templateName);
       	try {
           	if (templateId!=null) {
           		sendGridEmail.addSubstitution("${recipientEmail}", new String[] { new String(MimeUtility.encodeText(recipientEmail)) } );
