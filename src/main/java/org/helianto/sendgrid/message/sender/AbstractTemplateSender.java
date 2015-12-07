@@ -116,18 +116,18 @@ public abstract class AbstractTemplateSender {
 		SendGridMessageAdapter sendGridEmail = new SendGridMessageAdapter(); 
 		Map<String, String> paramMap = decodeParams(params);
 
-		sendGridEmail.setSubject(subject);
 		sendGridEmail.setHtml(getBody(paramMap));
 
 		sendGridEmail.addTo(recipientEmail);
 		sendGridEmail.addToName(recipientFirstName.trim()+" "+recipientLastName);
 		sendGridEmail.setFrom(senderEmail);
 		sendGridEmail.setFromName(senderName);
-		sendGridEmail.setText(subject);
 		String templateId = getTemplateId();
 		
       	try {
           	if (templateId!=null) {
+        		sendGridEmail.setSubject(new String(MimeUtility.encodeText(subject)));
+        		sendGridEmail.setText(new String(MimeUtility.encodeText(subject)));
           		sendGridEmail.addSubstitution("${recipientEmail}", new String[] { new String(MimeUtility.encodeText(recipientEmail)) } );
           		sendGridEmail.addSubstitution("${recipientFirstName}", new String[] { new String(MimeUtility.encodeText(recipientFirstName)) } );
           		sendGridEmail.addSubstitution("${recipientLastName}", new String[] { new String(MimeUtility.encodeText(recipientLastName)) } );
