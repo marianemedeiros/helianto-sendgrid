@@ -46,10 +46,6 @@ public abstract class AbstractTemplateSender {
 	 */
 	protected String staticPath = "/static/template/";
 	
-	protected String recipientName;
-	
-	protected String recipientEmail;
-	
 	private final String senderEmail;
 	
 	private final String senderName;
@@ -99,9 +95,6 @@ public abstract class AbstractTemplateSender {
 	 * @param params
 	 */
 	public boolean send(Identity recipient, String subject, String... params) {
-		recipientEmail = recipient.getPrincipal();
-		recipientName = recipient.getIdentityFirstName();
-		
 		return send(recipient.getPrincipal(), recipient.getIdentityFirstName(), recipient.getIdentityLastName()
 				,subject, params);
 	}
@@ -128,11 +121,11 @@ public abstract class AbstractTemplateSender {
 
 		sendGridEmail.addTo(recipientEmail);
 		sendGridEmail.addToName(recipientFirstName.trim()+" "+recipientLastName);
-		sendGridEmail.setFrom(recipientEmail);
-		sendGridEmail.setFromName(recipientFirstName);
+		sendGridEmail.setFrom(senderEmail);
+		sendGridEmail.setFromName(senderName);
 		sendGridEmail.setText(subject);
 		
-		String templateId = env.getProperty(templatePrefix+templateName);
+		String templateId = env.getProperty(getTemplateId());
       	try {
           	if (templateId!=null) {
           		sendGridEmail.addSubstitution("${recipientEmail}", new String[] { new String(MimeUtility.encodeText(recipientEmail)) } );
